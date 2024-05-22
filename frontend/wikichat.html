@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Simppeli wiki chatbotti"/>
+    <link rel="StyleSheet" href="./styles.css" type="text/css"/>
+    <script type = "text/javascript" src="./ui.js"></script>
+
+    <title>WikiChat</title>
+  </head>
+<body>
+  <div id="everything">  
+
+    <h1 id="header">WikiChat</h1>
+
+    <div id="container">
+      
+      <div class="valinta">
+        <input type="radio" id="yhteenveto" name="chatbotin-domain" value="yhteenveto" checked/>
+        <label for="yhteenveto">Yhteenveto</label>
+        <input type="radio" id="kokoSivu" name="chatbotin-domain" value="kokoSivu"/>
+        <label for="kokoSivu">Koko Wikipedia-sivu</label>
+      </div>
+
+      <div id="conversation">
+      </div>
+
+    </div>
+    <input type="text" id="user_input" placeholder="Kirjoita chatbotille..." />
+  </div>
+</body>

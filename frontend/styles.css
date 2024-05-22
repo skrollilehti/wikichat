@@ -1,0 +1,27 @@
+#container {
+    width: 100%;
+    min-height: 26em;
+}
+
+.valinta {
+    width: 27%;
+    text-align: center;
+}
+
+#conversation {
+    font-size: larger;
+    width: 27%;
+    height: 26em;
+    background-color:lightpink;
+    overflow-x:auto;
+    overflow-y: scroll;
+    text-align: justify;
+    padding: 0.7em;
+    border-radius: 2rem;
+}
+
+#user_input {
+    margin-top: 0.5em;
+    width: 25%;
+    padding: 0.5em;
+}
