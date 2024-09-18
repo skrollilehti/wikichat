@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Simppeli wiki chatbotti"/>
+    <link rel="StyleSheet" href="./styles_speech.css" type="text/css"/>
+    <script type = "text/javascript" src="./ui_speech.js"></script>
+
+    <title>WikiChat</title>
+  </head>
+<body>
+  <div id="everything">  
+
+    <h1 id="header">WikiChat puheella</h1>
+
+    <div id="container">
+      
+      <div id="col1">
+
+      <div class="valinta">
+        <input type="radio" id="yhteenveto" name="chatbotin-domain" value="yhteenveto" checked/>
+         Yhteenveto
+        <input type="radio" id="kokoSivu" name="chatbotin-domain" value="kokoSivu"/>
+         Wikipedia-sivu
+    </div>
+
+      <div id="conversation"></div>
+
+    <input type="text" id="user_input" placeholder="Puhu ja/tai kirjoita chatbotille... (klikkaa tätä puhuaksesi)" />
+
+    </div>
+
+    <div id="col2">
+      <div>
+      <p id="available-voices">Käytössä olevat äänet:</p>
+      </div>
+      <div id="select">
+      <select id="voice-select"></select>
+      
+      
+      <div>
+      <label for="rate">Nopeus</label>
+      <input type="range" min="0.5" max="2" value="1" step="0.1" id="rate" />
+      <div class="rate-value">1</div>
+      <div class="clearfix"></div>
+    </div>
+    <div>
+      <label for="pitch">Korkeus</label>
+      <input type="range" min="0" max="2" value="1" step="0.1" id="pitch" />
+      <div class="pitch-value">1</div>
+      <div class="clearfix"></div>
+    </div>
+    <div>
+      <p>Suosituista selaimista puheentunnistus toimii Chromella ja Edgellä. Firefoxilla toimii pelkkä puhe.
+        Jos käytät Firefoxia on sinun kommentoitava JavaScript-koodista ensin puheentunnistukseen liittyvä koodi pois.</p>
+    </div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+</body>

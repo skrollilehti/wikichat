@@ -1,0 +1,103 @@
+#container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    min-height: 26em;
+}
+
+#col1 {
+    order: 0;
+    width: 32%;
+}
+
+
+#col2 {
+    order: 1;
+    padding-left: 5em;
+    width: 25%;
+}
+
+
+#select {
+  width: 100%;
+}
+
+.valinta {
+    width: 100%;
+    text-align: center;
+}
+
+#conversation {
+    font-size: larger;
+    width: 100%;
+    height: 26em;
+    background-color:lightpink;
+    overflow-x:auto;
+    overflow-y: scroll;
+    text-align: justify;
+    padding: 0.7em;
+    border-radius: 2rem;
+}
+
+/* hieman CSS:ää keskustelulaatikon skrollipalkkiin */
+#conversation::-webkit-scrollbar {
+  width: 0.5em;
+}
+#conversation::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+#conversation::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
+#conversation::-webkit-scrollbar:hover {
+  width: 0.7em;
+}
+/* keskustelulaatikon skrollipalkin CSS-osa päättyy */
+
+#user_input {
+    margin-top: 0.5em;
+    width: 100%;
+    padding: 0.5em;
+}
+
+#available-voices {
+    font-weight: bold;
+}
+
+#voices {
+    width: 100%;
+    height: 25%;
+}
+
+.clearfix {
+    clear: both;
+}
+  
+label {
+    float: left;
+    width: 5%;
+    line-height: 1.5;
+  }
+  
+.rate-value,
+.pitch-value {
+    float: right;
+    width: 6%;
+    line-height: 1.5;
+  }
+  
+#rate, #pitch {
+    float: right;
+    width: 55%;
+  }
+  
+.controls {
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+.controls button {
+    padding: 10px;
+  }

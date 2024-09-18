@@ -2,6 +2,8 @@
 
 Pyydettyä Wikipedia-sivua tai sen yhteenvetoa tietovarantonaan käyttävä full stack chatbot.
 
+**Päivitys Skrollin numerossa 2024.3**: lisätty puhesynteesi.
+
 ## Python-ympäristö
 
 Palvelinpuolta varten kannattaa luoda oma Python-virtuaaliympäristö. Sen voi tehdä vaikka koko projektin juureen Windows-ympäristössä terminaalissa seuraavasti: `python -m venv .venv`. Edellä .venv on ympäristön nimi, jonka voi luonnollisesti myös nimetä toisin, eikä sen ole pakko alkaa pisteellä. Ympäristö käynnistetään Windowsissa näin: `.venv\Scripts\activate`. Linuxissa Python-tulkki käynnistetään komennolla python3, ja ympäristö aktivoidaan komennolla `source .venv/bin/activate`. Windowsissa ympäristöstä poistutaan komennolla `.venv\Scripts\deactivate` ja Linuxissa vain komennolla `deactivate` ympäristön ollessa aktiivinen. Huomaa asentaessasi tarvittavia Python-kirjastoja, että olet aktivoinut virtuaaliympäristön. Huomioi lisäksi, että olet deaktivoinut mahdollisesti järjestelmässäsi oletuksena tulevan virtuaaliympäristön.

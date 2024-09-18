@@ -1,13 +1,19 @@
+# Pythonista pitäisi olla  versio 3.8 tai uudempi
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import spacy
 from transformers import pipeline
 import wikipediaapi
 
+# asenna vielä tämä: pip install beautifulsoup4
+# tarvittaessa lisää informaatiota: https://beautiful-soup-4.readthedocs.io/en/latest/index.html?highlight=install#installing-beautiful-soup
+from bs4 import BeautifulSoup
+
 from libvoikko import Voikko
 
 # kommentoi alla oleva rivi pois, jos olet Linux-käyttäjä
-Voikko.setLibrarySearchPath("C:\Voikko")
+Voikko.setLibrarySearchPath("C:/Voikko")
 
 # käytetty SpaCy:n NLP-malli osaa suomen kielen taivutusmuodot erisnimissä paremmin kuin
 # malli fi_core_news_lg
@@ -26,7 +32,9 @@ nlp = spacy.load("spacy_fi_experimental_web_md")
 
 # Kaikkiaan transformer-malli vie noin 500 megatavua systeemilevyltä!
 model_name = "TurkuNLP/bert-base-finnish-cased-squad2"
-qa = pipeline('question-answering', model=model_name, tokenizer=model_name)
+
+# Jos sinulla ei ole GPU:ta koneessa, voit jättää device-parametrin pois
+qa = pipeline('question-answering', model=model_name, device=0)
 
 app = Flask(__name__)
 CORS(app)
@@ -49,19 +57,30 @@ top_intents = {
     "muistisi": 0
 }
 
-corpus = None
+global corpus, domain, thing
+corpus = ""
 domain = 0
-thing = ""
+thing = None
 
-def get_sections(sections, level=0):
+def extract_sections(page_text):
     global corpus
 
-    for s in sections:
-        title = s.title.lower().strip()
-        if not ("viitteet" in title or "katso myös" in title or "aiheesta muualla" in title or "lähteet" in title or "kirjallisuutta" in title):
-            corpus += s.text
-            get_sections(s.sections, level + 1)
+    soup = BeautifulSoup(page_text, 'html.parser')
 
+    sections = soup.find_all('h2')
+    for section in sections:
+        title = section.text.strip()
+        
+        print(f"Sektion otsikko: {title}")
+        
+        # alla listaan voi sisällyttää lisää suodatettavia sektioita
+        if title.lower().strip() not in ["viitteet", "katso myös", "aiheesta muualla", "lähteet", "kirjallisuutta"]:
+            for sibling in section.find_next_siblings():
+
+                # mukaan otetaan h2-tagien alaisuudesta vain kappaleet (ei esimerkiksi listoja)
+                if sibling.name and sibling.name.startswith('p'):
+                    # jos alla strip=True, tulevat jotkut sanat ilman välilyöntiä peräkkäin
+                    corpus += " " + sibling.get_text(strip=False)
 
 def get_thing(doc):
 
@@ -101,7 +120,7 @@ def get_domain(selection):
     global corpus, domain
 
     domain = int(selection)
-    corpus = None
+    corpus = ""
     
     return jsonify({"message": "Olen nyt asettanut valintasi tietopankkityypikseni ja nollannut muistini."}), 200
 
@@ -126,7 +145,7 @@ def get_message():
     top_intent = max(top_intents, key=top_intents.get)
     
     # Varmistetaan "hae" pyynnön läpimeno
-    if user_input.lower()[:5] == "hae":
+    if user_input.lower()[:4] == "hae ":
         top_intent = "hae"
         top_intents[top_intent] = 1.0
 
@@ -146,14 +165,14 @@ def get_message():
 
             # Varmuuden vuoksi try-except-lohko Wikipedia-sivun noutamisen ongelman vuoksi
             try:
-                wiki_wiki = wikipediaapi.Wikipedia(
+                wiki_html = wikipediaapi.Wikipedia(
                 user_agent='Wikipedia chatbot',
                     language='fi',
-                    extract_format=wikipediaapi.ExtractFormat.WIKI)
+                    extract_format=wikipediaapi.ExtractFormat.HTML)
                 
-                page = wiki_wiki.page(thing)
+                page = wiki_html.page(thing)
                 if page.exists() == False:
-                    corpus = None
+                    corpus = ""
                     return jsonify({"message": "En löytänyt pyytämääsi Wikipedia-sivua."}), 500
 
                 # poimitaan Wikipedia-sivun yhteenveto korpuskontekstiksi QA-systeemille
@@ -161,21 +180,19 @@ def get_message():
                     corpus = page.summary
                 else:
                     corpus = ""
-                    sections = page.sections
-
-                    get_sections(sections) # Wiki-sivun olennainen sisältö tulee globaaliin muuuttujaan corpus
-
+                    full_page = page.text 
+                    extract_sections(full_page)
             except:
-                corpus = None
+                corpus = ""
                 return jsonify({"message": "Virhe haettaessa Wikipedia-sivua. Tarkista oikeinkirjoitus."}), 500
 
             return jsonify({"message": "Voit nyt esittää kysymyksiä pyynnöstäsi."}), 200
 
         if top_intent == "muistisi":
 
-            if corpus != None and domain == 0:
+            if corpus.strip() != "" and domain == 0:
                 return jsonify({"message": f"Minulla on yhteenveto aiheesta {thing}"}), 200
-            elif corpus != None and domain == 1:
+            elif corpus.strip() != "" and domain == 1:
                 return jsonify({"message": f"Minulla on koko Wikipedia-sivu aiheesta {thing}"}), 200
             else:
                 return jsonify({"message": "Minulla ei ole mitään kontekstia muistissa."}), 200
@@ -189,7 +206,7 @@ def get_message():
         return jsonify({"message": chatbot_mind[top_intent]}), 200
     
     else:
-        if corpus != None:
+        if corpus.strip() != "":
             
             try:
                 output = qa({"question": user_input, "context": corpus})
